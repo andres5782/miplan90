@@ -1,7 +1,30 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
-// ─── STORAGE ──────────────────────────────────────────────────────────────────
-const S = {
+// ─── SUPABASE ─────────────────────────────────────────────────────────────────
+const SB_URL = "https://tgtequfxljhehivdncen.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRndGVxdWZ4bGpoZWhpdmRuY2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NzM5MzksImV4cCI6MjA4ODQ0OTkzOX0.AIZZQA5lbXbPswb7g-Esu0MC4Vtfy_mRzkbzG5T-lpA";
+const SB_HEADERS = { "Content-Type": "application/json", "apikey": SB_KEY, "Authorization": `Bearer ${SB_KEY}` };
+
+async function sbLoad() {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/user_data?id=eq.main`, { headers: SB_HEADERS });
+    const data = await r.json();
+    return data?.[0] || null;
+  } catch { return null; }
+}
+
+async function sbSave(patch) {
+  try {
+    await fetch(`${SB_URL}/rest/v1/user_data?id=eq.main`, {
+      method: "PATCH",
+      headers: { ...SB_HEADERS, "Prefer": "return=minimal" },
+      body: JSON.stringify({ ...patch, updated_at: new Date().toISOString() }),
+    });
+  } catch {}
+}
+
+// Local fallback
+const L = {
   get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
@@ -204,21 +227,22 @@ function PortionVisual({ type, color }) {
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   // ── Main navigation ──
-  const [section, setSection] = useState("home"); // home | food | training
+  const [section, setSection] = useState("home");
   const [foodTab, setFoodTab] = useState("week");
   const [trainTab, setTrainTab] = useState("calendar");
+  const [loaded, setLoaded] = useState(false);
 
   // ── Nutrition state ──
-  const [plan, setPlan] = useState(() => S.get("plan", DEFAULT_PLAN));
-  const [shopDone, setShopDone] = useState(() => S.get("shopDone", {}));
+  const [plan, setPlan] = useState(DEFAULT_PLAN);
+  const [shopDone, setShopDone] = useState({});
   const [openPortion, setOpenPortion] = useState(null);
   const [shopCat, setShopCat] = useState(Object.keys(SHOPPING)[0]);
-  const [editingMeal, setEditingMeal] = useState(null); // {dayIdx, meal}
+  const [editingMeal, setEditingMeal] = useState(null);
   const [openDay, setOpenDay] = useState(null);
 
   // ── Training state ──
-  const [sessions, setSessions] = useState(() => S.get("sessions", {}));
-  const [measurements, setMeasurements] = useState(() => S.get("measurements", {}));
+  const [sessions, setSessions] = useState({});
+  const [measurements, setMeasurements] = useState({});
   const [activeDay, setActiveDay] = useState(null);
   const [draft, setDraft] = useState(null);
   const [viewMonth, setViewMonth] = useState({ y: TODAY.getFullYear(), m: TODAY.getMonth() });
@@ -227,19 +251,40 @@ export default function App() {
 
   // ── Check-in state ──
   const [checkinOpen, setCheckinOpen] = useState(false);
-  const [checkins, setCheckins] = useState(() => S.get("checkins", {}));
+  const [checkins, setCheckins] = useState({});
   const [checkinDraft, setCheckinDraft] = useState({ physical:0, anxiety:0, training:0, note:"" });
 
-  // ── Today's meals (from plan, day of week) ──
+  // ── Load from Supabase on mount ──
+  useEffect(() => {
+    sbLoad().then(data => {
+      if (data) {
+        if (data.sessions) setSessions(data.sessions);
+        if (data.measurements) setMeasurements(data.measurements);
+        if (data.checkins) setCheckins(data.checkins);
+        if (data.plan && data.plan.length) setPlan(data.plan);
+        if (data.shop_done) setShopDone(data.shop_done);
+      } else {
+        // fallback to localStorage if Supabase empty
+        setSessions(L.get("sessions", {}));
+        setMeasurements(L.get("measurements", {}));
+        setCheckins(L.get("checkins", {}));
+        setPlan(L.get("plan", DEFAULT_PLAN));
+        setShopDone(L.get("shopDone", {}));
+      }
+      setLoaded(true);
+    });
+  }, []);
+
+  // ── Today's meals ──
   const todayDowIdx = TODAY.getDay() === 0 ? 6 : TODAY.getDay() - 1;
   const todayMeals = plan[todayDowIdx];
 
-  // ── Persist ──
-  const persistSessions = s => { setSessions(s); S.set("sessions", s); };
-  const persistPlan = p => { setPlan(p); S.set("plan", p); };
-  const persistMeasurements = m => { setMeasurements(m); S.set("measurements", m); };
-  const persistCheckins = c => { setCheckins(c); S.set("checkins", c); };
-  const persistShop = s => { setShopDone(s); S.set("shopDone", s); };
+  // ── Persist to Supabase + localStorage fallback ──
+  const persistSessions = s => { setSessions(s); L.set("sessions", s); sbSave({ sessions: s }); };
+  const persistPlan = p => { setPlan(p); L.set("plan", p); sbSave({ plan: p }); };
+  const persistMeasurements = m => { setMeasurements(m); L.set("measurements", m); sbSave({ measurements: m }); };
+  const persistCheckins = c => { setCheckins(c); L.set("checkins", c); sbSave({ checkins: c }); };
+  const persistShop = s => { setShopDone(s); L.set("shopDone", s); sbSave({ shop_done: s }); };
 
   // ── Derived: last training + next ──
   const lastTrainingId = useMemo(() => {
@@ -352,6 +397,14 @@ export default function App() {
   const { first, total } = getDays(viewMonth.y, viewMonth.m);
 
   // ─────────────────────────────────────────────────────────────────────────────
+  if (!loaded) return (
+    <div style={{ minHeight:"100vh", background:"#080810", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16 }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');`}</style>
+      <div style={{ fontSize:48 }}>💪</div>
+      <div style={{ fontFamily:"'Bebas Neue'", fontSize:24, letterSpacing:3, color:"#60a5fa" }}>CARGANDO TU PLAN...</div>
+    </div>
+  );
+
   return (
     <div style={{ minHeight:"100vh", background:"#080810", color:"#e2e2f0", fontFamily:"'Figtree', system-ui, sans-serif", maxWidth:500, margin:"0 auto" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap');* { box-sizing:border-box; } textarea,input { outline:none; }`}</style>
