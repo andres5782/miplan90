@@ -121,7 +121,7 @@ const PORTIONS = [
 // ─── VISUAL PORTIONS ──────────────────────────────────────────────────────────
 function PortionVisual({ type, color }) {
   const row = { display:"flex", alignItems:"center", justifyContent:"center", gap:16, margin:"12px 0" };
-  const lbl = { fontSize:9, color:"rgba(255,255,255,0.35)", textAlign:"center", marginTop:4, fontWeight:700, letterSpacing:1 };
+  const lbl = { fontSize:9, color:TEXT3, textAlign:"center", marginTop:4, fontWeight:700, letterSpacing:1 };
   if (type === "palm") return (
     <div style={row}>
       <div style={{textAlign:"center"}}>
@@ -134,7 +134,7 @@ function PortionVisual({ type, color }) {
         </svg>
         <div style={lbl}>TU PALMA</div>
       </div>
-      <div style={{fontSize:20,color:"rgba(255,255,255,0.2)"}}>≈</div>
+      <div style={{fontSize:20,color:TEXT3}}>≈</div>
       <div style={{textAlign:"center"}}>
         <svg width="56" height="66" viewBox="0 0 56 66">
           <rect x="6" y="14" width="44" height="40" rx="8" fill={color+"20"} stroke={color} strokeWidth="1.5"/>
@@ -154,7 +154,7 @@ function PortionVisual({ type, color }) {
         </svg>
         <div style={lbl}>PUÑO</div>
       </div>
-      <div style={{fontSize:20,color:"rgba(255,255,255,0.2)"}}>≈</div>
+      <div style={{fontSize:20,color:TEXT3}}>≈</div>
       <div style={{textAlign:"center"}}>
         <svg width="56" height="66" viewBox="0 0 56 66">
           <ellipse cx="28" cy="40" rx="20" ry="16" fill={color+"20"} stroke={color} strokeWidth="1.5"/>
@@ -174,7 +174,7 @@ function PortionVisual({ type, color }) {
         </svg>
         <div style={lbl}>MÁXIMO</div>
       </div>
-      <div style={{fontSize:20,color:"rgba(255,255,255,0.2)"}}>→</div>
+      <div style={{fontSize:20,color:TEXT3}}>→</div>
       <div style={{textAlign:"center"}}>
         <svg width="56" height="66" viewBox="0 0 56 66">
           <ellipse cx="28" cy="36" rx="17" ry="24" fill={color+"20"} stroke={color} strokeWidth="1.5"/>
@@ -194,7 +194,7 @@ function PortionVisual({ type, color }) {
         </svg>
         <div style={lbl}>PUÑADO</div>
       </div>
-      <div style={{fontSize:20,color:"rgba(255,255,255,0.2)"}}>≈</div>
+      <div style={{fontSize:20,color:TEXT3}}>≈</div>
       <div style={{textAlign:"center"}}>
         <svg width="56" height="66" viewBox="0 0 56 66">
           {[...Array(12)].map((_,i)=><ellipse key={i} cx={14+(i%4)*10} cy={24+Math.floor(i/4)*14} rx="4" ry="5.5" fill={color} opacity="0.4"/>)}
@@ -391,22 +391,28 @@ export default function App() {
   };
 
   // ── Styles ──
-  const ACC = "#60a5fa";
-  const card = (x={}) => ({ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:16, overflow:"hidden", ...x });
-  const secT = t => <div style={{ fontSize:10, letterSpacing:2.5, fontWeight:800, color:"rgba(255,255,255,0.28)", marginBottom:10, marginTop:4 }}>{t}</div>;
+  const BG = "#f5f0e8";        // crema principal
+  const BG2 = "#ede8df";       // crema más oscura (headers)
+  const BG3 = "#e8e2d8";       // bordes y cards
+  const TEXT = "#1a1a14";      // texto principal
+  const TEXT2 = "#6b6556";     // texto secundario
+  const TEXT3 = "#a09880";     // texto terciario
+  const ACC = "#2d6a4f";       // verde oscuro orgánico
+  const card = (x={}) => ({ background:"#fff", border:`1px solid ${BG3}`, borderRadius:16, overflow:"hidden", ...x });
+  const secT = t => <div style={{ fontSize:10, letterSpacing:2.5, fontWeight:800, color:TEXT3, marginBottom:10, marginTop:4 }}>{t}</div>;
   const { first, total } = getDays(viewMonth.y, viewMonth.m);
 
   // ─────────────────────────────────────────────────────────────────────────────
   if (!loaded) return (
-    <div style={{ minHeight:"100vh", background:"#080810", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16 }}>
+    <div style={{ minHeight:"100vh", background:"#f5f0e8", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16 }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');`}</style>
       <div style={{ fontSize:48 }}>💪</div>
-      <div style={{ fontFamily:"'Bebas Neue'", fontSize:24, letterSpacing:3, color:"#60a5fa" }}>CARGANDO TU PLAN...</div>
+      <div style={{ fontFamily:"'Bebas Neue'", fontSize:24, letterSpacing:3, color:"#2d6a4f" }}>CARGANDO TU PLAN...</div>
     </div>
   );
 
   return (
-    <div style={{ minHeight:"100vh", background:"#080810", color:"#e2e2f0", fontFamily:"'Figtree', system-ui, sans-serif", maxWidth:500, margin:"0 auto" }}>
+    <div style={{ minHeight:"100vh", background:"#f5f0e8", color:"#1a1a14", fontFamily:"'Figtree', system-ui, sans-serif", maxWidth:500, margin:"0 auto" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap');* { box-sizing:border-box; } textarea,input { outline:none; }`}</style>
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -415,7 +421,7 @@ export default function App() {
       {section === "home" && (
         <>
           <div style={{ padding:"28px 18px 16px" }}>
-            <div style={{ fontFamily:"'Bebas Neue'", fontSize:32, letterSpacing:3, color:"#fff", lineHeight:1 }}>MI PLAN 90 DÍAS</div>
+            <div style={{ fontFamily:"'Bebas Neue'", fontSize:32, letterSpacing:3, color:TEXT, lineHeight:1 }}>MI PLAN 90 DÍAS</div>
             <div style={{ fontSize:12, color:ACC, fontWeight:600, letterSpacing:1.5, marginTop:4 }}>MARZO → JUNIO</div>
           </div>
 
@@ -425,7 +431,7 @@ export default function App() {
               <div style={{ fontSize:22 }}>⚠️</div>
               <div>
                 <div style={{ fontSize:13, fontWeight:700, color:"#f87171" }}>Llevas {daysSinceTraining} días sin entrenar</div>
-                <div style={{ fontSize:12, color:"rgba(255,255,255,0.6)", marginTop:3 }}>No hace falta recuperar lo perdido. Haz {nextT.label} hoy, 50 minutos.</div>
+                <div style={{ fontSize:12, color:TEXT2, marginTop:3 }}>No hace falta recuperar lo perdido. Haz {nextT.label} hoy, 50 minutos.</div>
               </div>
             </div>
           )}
@@ -436,7 +442,7 @@ export default function App() {
               <div style={{ fontSize:22 }}>📸</div>
               <div>
                 <div style={{ fontSize:13, fontWeight:700, color:"#f59e0b" }}>Es lunes — hazte las fotos</div>
-                <div style={{ fontSize:11, color:"rgba(255,255,255,0.5)", marginTop:2 }}>Frontal · Lateral derecho · Lateral izquierdo</div>
+                <div style={{ fontSize:11, color:TEXT2, marginTop:2 }}>Frontal · Lateral derecho · Lateral izquierdo</div>
               </div>
             </div>
           )}
@@ -448,9 +454,9 @@ export default function App() {
               { val:totalSessions, label:"TOTAL", color:ACC },
               { val:yogaWeek, label:"YOGA/SEM", color:"#34d399" },
             ].map(s => (
-              <div key={s.label} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, padding:"12px 8px", textAlign:"center" }}>
+              <div key={s.label} style={{ background:BG, border:`1px solid ${BG3}`, borderRadius:14, padding:"12px 8px", textAlign:"center" }}>
                 <div style={{ fontFamily:"'Bebas Neue'", fontSize:28, color:s.color, lineHeight:1 }}>{s.val}</div>
-                <div style={{ fontSize:8, color:"rgba(255,255,255,0.3)", fontWeight:800, letterSpacing:0.5, marginTop:3 }}>{s.label}</div>
+                <div style={{ fontSize:8, color:TEXT3, fontWeight:800, letterSpacing:0.5, marginTop:3 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -462,7 +468,7 @@ export default function App() {
               <div style={{ fontSize:32 }}>{nextT.emoji}</div>
               <div>
                 <div style={{ fontFamily:"'Bebas Neue'", fontSize:26, color:nextT.color, letterSpacing:1 }}>{nextT.label}</div>
-                <div style={{ fontSize:12, color:"rgba(255,255,255,0.5)" }}>Gym Monster · ~55 min</div>
+                <div style={{ fontSize:12, color:TEXT2 }}>Gym Monster · ~55 min</div>
               </div>
             </div>
           </div>
@@ -471,7 +477,7 @@ export default function App() {
           {tomorrowMeals.length > 0 && (
             <div style={{ margin:"0 18px 14px", background:"rgba(96,165,250,0.08)", border:"1px solid rgba(96,165,250,0.25)", borderRadius:14, padding:"12px 14px" }}>
               <div style={{ fontSize:10, color:ACC, fontWeight:800, letterSpacing:1.5, marginBottom:6 }}>❄️ DESCONGELA ESTA NOCHE</div>
-              {tomorrowMeals.map((m,i) => <div key={i} style={{ fontSize:13, color:"rgba(255,255,255,0.75)", marginBottom:2 }}>→ {m.label}</div>)}
+              {tomorrowMeals.map((m,i) => <div key={i} style={{ fontSize:13, color:TEXT2, marginBottom:2 }}>→ {m.label}</div>)}
             </div>
           )}
 
@@ -485,12 +491,12 @@ export default function App() {
               const isLibre = m?.protein === "libre";
               return (
                 <div key={meal} style={{ display:"flex", alignItems:"center", gap:10, paddingBottom:10, marginBottom:10, borderBottom: meal!=="N"?"1px solid rgba(255,255,255,0.06)":"none" }}>
-                  <div style={{ minWidth:70, fontSize:10, color:"rgba(255,255,255,0.35)", fontWeight:700 }}>{mLabel}</div>
+                  <div style={{ minWidth:70, fontSize:10, color:TEXT3, fontWeight:700 }}>{mLabel}</div>
                   <div style={{ flex:1 }}>
                     <div style={{ fontSize:13, fontWeight:600, color: isLibre?"#a78bfa":"rgba(255,255,255,0.85)" }}>{m?.label || "—"}</div>
-                    <div style={{ fontSize:11, color:"rgba(255,255,255,0.35)", marginTop:1 }}>{m?.desc}</div>
+                    <div style={{ fontSize:11, color:TEXT3, marginTop:1 }}>{m?.desc}</div>
                   </div>
-                  <button onClick={() => { setSection("food"); setFoodTab("week"); setOpenDay(todayDowIdx); }} style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:8, padding:"5px 8px", cursor:"pointer", fontSize:11, color:"rgba(255,255,255,0.4)" }}>✏️</button>
+                  <button onClick={() => { setSection("food"); setFoodTab("week"); setOpenDay(todayDowIdx); }} style={{ background:BG, border:`1px solid ${BG3}`, borderRadius:8, padding:"5px 8px", cursor:"pointer", fontSize:11, color:TEXT3 }}>✏️</button>
                 </div>
               );
             })}
@@ -498,15 +504,15 @@ export default function App() {
 
           {/* Weekly check-in */}
           <div style={{ margin:"0 18px 14px", ...card({ padding:16 }) }}>
-            <div style={{ fontSize:10, letterSpacing:2, color:"rgba(255,255,255,0.3)", fontWeight:800, marginBottom:10 }}>CHECK-IN SEMANAL</div>
+            <div style={{ fontSize:10, letterSpacing:2, color:TEXT3, fontWeight:800, marginBottom:10 }}>CHECK-IN SEMANAL</div>
             {thisWeekCheckin ? (
-              <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)" }}>
-                Semana registrada ✓ — <span style={{ color:"rgba(255,255,255,0.4)", fontSize:11 }}>{thisWeekCheckin.date}</span>
-                {thisWeekCheckin.note && <div style={{ marginTop:6, fontStyle:"italic", fontSize:12, color:"rgba(255,255,255,0.5)" }}>"{thisWeekCheckin.note}"</div>}
+              <div style={{ fontSize:13, color:TEXT2 }}>
+                Semana registrada ✓ — <span style={{ color:TEXT3, fontSize:11 }}>{thisWeekCheckin.date}</span>
+                {thisWeekCheckin.note && <div style={{ marginTop:6, fontStyle:"italic", fontSize:12, color:TEXT2 }}>"{thisWeekCheckin.note}"</div>}
               </div>
             ) : (
               <>
-                <div style={{ fontSize:12, color:"rgba(255,255,255,0.5)", marginBottom:10 }}>3 preguntas, 30 segundos. Cómo va la semana.</div>
+                <div style={{ fontSize:12, color:TEXT2, marginBottom:10 }}>3 preguntas, 30 segundos. Cómo va la semana.</div>
                 <button onClick={() => { setCheckinDraft({physical:0,anxiety:0,training:0,note:""}); setCheckinOpen(true); }} style={{ width:"100%", background:ACC+"18", border:`1px solid ${ACC}40`, borderRadius:12, padding:"11px", color:ACC, fontSize:13, fontWeight:700, cursor:"pointer" }}>
                   Hacer check-in
                 </button>
@@ -519,12 +525,12 @@ export default function App() {
             <button onClick={() => setSection("food")} style={{ background:"rgba(52,211,153,0.08)", border:"1px solid rgba(52,211,153,0.25)", borderRadius:16, padding:"20px 14px", cursor:"pointer", color:"inherit", textAlign:"left" }}>
               <div style={{ fontSize:28, marginBottom:8 }}>🥗</div>
               <div style={{ fontFamily:"'Bebas Neue'", fontSize:20, letterSpacing:1, color:"#34d399" }}>ALIMENTACIÓN</div>
-              <div style={{ fontSize:11, color:"rgba(255,255,255,0.4)", marginTop:4 }}>Planning · Compra · Snacks · Cantidades</div>
+              <div style={{ fontSize:11, color:TEXT3, marginTop:4 }}>Planning · Compra · Snacks · Cantidades</div>
             </button>
             <button onClick={() => setSection("training")} style={{ background:"rgba(96,165,250,0.08)", border:"1px solid rgba(96,165,250,0.25)", borderRadius:16, padding:"20px 14px", cursor:"pointer", color:"inherit", textAlign:"left" }}>
               <div style={{ fontSize:28, marginBottom:8 }}>💪</div>
               <div style={{ fontFamily:"'Bebas Neue'", fontSize:20, letterSpacing:1, color:ACC }}>ENTRENO</div>
-              <div style={{ fontSize:11, color:"rgba(255,255,255,0.4)", marginTop:4 }}>Calendario · Progreso · Mediciones</div>
+              <div style={{ fontSize:11, color:TEXT3, marginTop:4 }}>Calendario · Progreso · Mediciones</div>
             </button>
           </div>
         </>
@@ -535,11 +541,11 @@ export default function App() {
       ══════════════════════════════════════════════════════════════════════ */}
       {section === "food" && (
         <>
-          <div style={{ background:"#0c0c1a", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"16px 18px 0", position:"sticky", top:0, zIndex:50 }}>
+          <div style={{ background:BG2, borderBottom:`1px solid ${BG3}`, padding:"16px 18px 0", position:"sticky", top:0, zIndex:50 }}>
             <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
-              <button onClick={() => setSection("home")} style={{ background:"rgba(255,255,255,0.06)", border:"none", borderRadius:10, width:34, height:34, cursor:"pointer", color:"rgba(255,255,255,0.6)", fontSize:18 }}>←</button>
+              <button onClick={() => setSection("home")} style={{ background:BG2, border:"none", borderRadius:10, width:34, height:34, cursor:"pointer", color:TEXT2, fontSize:18 }}>←</button>
               <div>
-                <div style={{ fontFamily:"'Bebas Neue'", fontSize:22, letterSpacing:2, color:"#fff", lineHeight:1 }}>ALIMENTACIÓN</div>
+                <div style={{ fontFamily:"'Bebas Neue'", fontSize:22, letterSpacing:2, color:TEXT, lineHeight:1 }}>ALIMENTACIÓN</div>
               </div>
             </div>
             <div style={{ display:"flex" }}>
@@ -567,7 +573,7 @@ export default function App() {
                       return (
                         <div key={key} style={{ background:col+"12", border:`1px solid ${col}30`, borderRadius:10, padding:"8px 10px" }}>
                           <div style={{ fontSize:16, marginBottom:2 }}>{pm.emoji}</div>
-                          <div style={{ fontSize:10, fontWeight:700, color:"rgba(255,255,255,0.65)", marginBottom:2 }}>{pm.label}</div>
+                          <div style={{ fontSize:10, fontWeight:700, color:TEXT2, marginBottom:2 }}>{pm.label}</div>
                           <div style={{ fontSize:9, color:col, fontWeight:700 }}>{count}x {pm.max?`/ máx ${pm.max}`:"esta sem."}</div>
                         </div>
                       );
@@ -582,21 +588,21 @@ export default function App() {
                   return (
                     <div key={di} style={{ ...card({ marginBottom:8 }) }}>
                       <button onClick={() => setOpenDay(isOpen ? null : di)} style={{ width:"100%", background:"none", border:"none", padding:"12px 14px", display:"flex", alignItems:"center", gap:10, cursor:"pointer", color:"inherit" }}>
-                        <div style={{ width:32, height:32, borderRadius:8, background:"rgba(255,255,255,0.06)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, fontWeight:800, color:"rgba(255,255,255,0.5)", flexShrink:0 }}>
+                        <div style={{ width:32, height:32, borderRadius:8, background:BG2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, fontWeight:800, color:TEXT2, flexShrink:0 }}>
                           {["L","M","X","J","V","S","D"][di]}
                         </div>
                         <div style={{ flex:1, display:"flex", gap:5 }}>
                           {["D","C","N"].map(meal => {
                             const m = MEAL_OPTIONS[meal].find(x => x.id === plan[di][meal]);
                             return (
-                              <div key={meal} style={{ flex:1, background:"rgba(255,255,255,0.04)", borderRadius:7, padding:"5px 5px", fontSize:9, color:"rgba(255,255,255,0.55)", lineHeight:1.3 }}>
+                              <div key={meal} style={{ flex:1, background:BG, borderRadius:7, padding:"5px 5px", fontSize:9, color:TEXT2, lineHeight:1.3 }}>
                                 <div style={{ fontSize:10, marginBottom:2 }}>{ {D:"🌅",C:"☀️",N:"🌙"}[meal] }</div>
                                 <div style={{ fontWeight:600 }}>{m?.label||"—"}</div>
                               </div>
                             );
                           })}
                         </div>
-                        <div style={{ color:"rgba(255,255,255,0.2)", fontSize:14 }}>{isOpen?"▲":"▼"}</div>
+                        <div style={{ color:TEXT3, fontSize:14 }}>{isOpen?"▲":"▼"}</div>
                       </button>
 
                       {isOpen && (
@@ -607,24 +613,24 @@ export default function App() {
                             const isEditingThis = editingMeal?.dayIdx===di && editingMeal?.meal===meal;
                             return (
                               <div key={meal} style={{ marginBottom:10 }}>
-                                <div style={{ fontSize:10, color:"rgba(255,255,255,0.3)", fontWeight:700, letterSpacing:1, marginBottom:5 }}>{mLabel.toUpperCase()}</div>
+                                <div style={{ fontSize:10, color:TEXT3, fontWeight:700, letterSpacing:1, marginBottom:5 }}>{mLabel.toUpperCase()}</div>
                                 {!isEditingThis ? (
                                   <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-                                    <div style={{ flex:1, background:"rgba(255,255,255,0.04)", borderRadius:10, padding:"9px 11px" }}>
+                                    <div style={{ flex:1, background:BG, borderRadius:10, padding:"9px 11px" }}>
                                       <div style={{ fontSize:13, fontWeight:600 }}>{m?.label}</div>
-                                      <div style={{ fontSize:11, color:"rgba(255,255,255,0.4)", marginTop:2 }}>{m?.desc}</div>
+                                      <div style={{ fontSize:11, color:TEXT3, marginTop:2 }}>{m?.desc}</div>
                                     </div>
-                                    <button onClick={() => setEditingMeal({dayIdx:di,meal})} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"9px 10px", cursor:"pointer", fontSize:14 }}>✏️</button>
+                                    <button onClick={() => setEditingMeal({dayIdx:di,meal})} style={{ background:BG2, border:`1px solid ${BG3}`, borderRadius:10, padding:"9px 10px", cursor:"pointer", fontSize:14 }}>✏️</button>
                                   </div>
                                 ) : (
                                   <div style={{ ...card({ border:`1px solid ${ACC}30` }) }}>
                                     {MEAL_OPTIONS[meal].map(opt => (
-                                      <button key={opt.id} onClick={() => { persistPlan(plan.map((d,i)=>i===di?{...d,[meal]:opt.id}:d)); setEditingMeal(null); }} style={{ width:"100%", background:plan[di][meal]===opt.id?ACC+"15":"none", border:"none", borderBottom:"1px solid rgba(255,255,255,0.05)", padding:"10px 12px", textAlign:"left", cursor:"pointer", color:"inherit" }}>
+                                      <button key={opt.id} onClick={() => { persistPlan(plan.map((d,i)=>i===di?{...d,[meal]:opt.id}:d)); setEditingMeal(null); }} style={{ width:"100%", background:plan[di][meal]===opt.id?ACC+"15":"none", border:"none", borderBottom:`1px solid ${BG3}`, padding:"10px 12px", textAlign:"left", cursor:"pointer", color:"inherit" }}>
                                         <div style={{ fontSize:12, fontWeight:600, color:plan[di][meal]===opt.id?ACC:"rgba(255,255,255,0.8)" }}>{opt.label}</div>
-                                        <div style={{ fontSize:10, color:"rgba(255,255,255,0.4)", marginTop:2 }}>{opt.desc}</div>
+                                        <div style={{ fontSize:10, color:TEXT3, marginTop:2 }}>{opt.desc}</div>
                                       </button>
                                     ))}
-                                    <button onClick={() => setEditingMeal(null)} style={{ width:"100%", background:"none", border:"none", padding:"8px", color:"rgba(255,255,255,0.3)", fontSize:11, cursor:"pointer" }}>Cancelar</button>
+                                    <button onClick={() => setEditingMeal(null)} style={{ width:"100%", background:"none", border:"none", padding:"8px", color:TEXT3, fontSize:11, cursor:"pointer" }}>Cancelar</button>
                                   </div>
                                 )}
                               </div>
@@ -641,7 +647,7 @@ export default function App() {
             {/* SHOP */}
             {foodTab === "shop" && (
               <>
-                <div style={{ background:"rgba(96,165,250,0.08)", border:"1px solid rgba(96,165,250,0.2)", borderRadius:14, padding:12, marginBottom:16, fontSize:12, color:"rgba(255,255,255,0.65)", lineHeight:1.6 }}>
+                <div style={{ background:"rgba(96,165,250,0.08)", border:"1px solid rgba(96,165,250,0.2)", borderRadius:14, padding:12, marginBottom:16, fontSize:12, color:TEXT2, lineHeight:1.6 }}>
                   📅 Haz esta compra <strong style={{color:ACC}}>el domingo</strong>. Marca lo que ya tienes. Lo que no está en casa no puedes comerlo mal.
                 </div>
                 <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:16 }}>
@@ -655,13 +661,13 @@ export default function App() {
                   const k = `${shopCat}::${item}`;
                   const done = shopDone[k];
                   return (
-                    <button key={i} onClick={() => persistShop({...shopDone,[k]:!done})} style={{ width:"100%", background:"none", border:"none", borderBottom:"1px solid rgba(255,255,255,0.05)", padding:"12px 4px", display:"flex", alignItems:"center", gap:10, cursor:"pointer", color:"inherit" }}>
-                      <div style={{ width:22, height:22, borderRadius:6, background:done?"#34d399":"rgba(255,255,255,0.07)", border:done?"none":"1.5px solid rgba(255,255,255,0.2)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, color:"#080810", flexShrink:0 }}>{done?"✓":""}</div>
+                    <button key={i} onClick={() => persistShop({...shopDone,[k]:!done})} style={{ width:"100%", background:"none", border:"none", borderBottom:`1px solid ${BG3}`, padding:"12px 4px", display:"flex", alignItems:"center", gap:10, cursor:"pointer", color:"inherit" }}>
+                      <div style={{ width:22, height:22, borderRadius:6, background:done?"#34d399":"rgba(255,255,255,0.07)", border:done?"none":"1.5px solid rgba(255,255,255,0.2)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, color:BG, flexShrink:0 }}>{done?"✓":""}</div>
                       <div style={{ fontSize:13, color:done?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.8)", textDecoration:done?"line-through":"none", textAlign:"left" }}>{item}</div>
                     </button>
                   );
                 })}
-                <button onClick={() => persistShop({})} style={{ width:"100%", background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, padding:12, color:"rgba(255,255,255,0.35)", fontSize:12, cursor:"pointer", marginTop:16 }}>
+                <button onClick={() => persistShop({})} style={{ width:"100%", background:BG, border:`1px solid ${BG3}`, borderRadius:12, padding:12, color:TEXT3, fontSize:12, cursor:"pointer", marginTop:16 }}>
                   Reiniciar lista (nueva semana)
                 </button>
               </>
@@ -670,16 +676,16 @@ export default function App() {
             {/* SNACKS */}
             {foodTab === "snacks" && (
               <>
-                <div style={{ background:"rgba(168,85,247,0.08)", border:"1px solid rgba(168,85,247,0.2)", borderRadius:14, padding:12, marginBottom:16, fontSize:12, color:"rgba(255,255,255,0.65)", lineHeight:1.6 }}>
+                <div style={{ background:"rgba(168,85,247,0.08)", border:"1px solid rgba(168,85,247,0.2)", borderRadius:14, padding:12, marginBottom:16, fontSize:12, color:TEXT2, lineHeight:1.6 }}>
                   🧠 <strong style={{color:"#c084fc"}}>Antes de picar:</strong> bebe un vaso de agua y espera 5 min. A veces es sed o ansiedad, no hambre real.
                 </div>
                 {SNACKS.map((s,i) => (
                   <div key={i} style={{ ...card({ marginBottom:10, padding:14, display:"flex", gap:12 }) }}>
-                    <div style={{ fontSize:26, width:44, height:44, background:"rgba(255,255,255,0.05)", borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{s.icon}</div>
+                    <div style={{ fontSize:26, width:44, height:44, background:BG, borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{s.icon}</div>
                     <div>
-                      <div style={{ fontSize:9, color:"rgba(255,255,255,0.3)", letterSpacing:1.5, fontWeight:700, marginBottom:3 }}>{s.when.toUpperCase()}</div>
+                      <div style={{ fontSize:9, color:TEXT3, letterSpacing:1.5, fontWeight:700, marginBottom:3 }}>{s.when.toUpperCase()}</div>
                       <div style={{ fontSize:14, fontWeight:700, marginBottom:3 }}>{s.name}</div>
-                      <div style={{ fontSize:12, color:"rgba(255,255,255,0.6)", lineHeight:1.5 }}>{s.desc}</div>
+                      <div style={{ fontSize:12, color:TEXT2, lineHeight:1.5 }}>{s.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -689,7 +695,7 @@ export default function App() {
             {/* PORTIONS */}
             {foodTab === "portions" && (
               <>
-                <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid rgba(52,211,153,0.2)", borderRadius:14, padding:12, marginBottom:16, fontSize:12, color:"rgba(255,255,255,0.65)", lineHeight:1.6 }}>
+                <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid rgba(52,211,153,0.2)", borderRadius:14, padding:12, marginBottom:16, fontSize:12, color:TEXT2, lineHeight:1.6 }}>
                   ✋ <strong style={{color:"#34d399"}}>Sin pesar nada.</strong> Tu mano siempre está contigo y es proporcional a tu cuerpo.
                 </div>
                 {PORTIONS.map((p,i) => {
@@ -698,17 +704,17 @@ export default function App() {
                   return (
                     <div key={i} style={{ ...card({ marginBottom:8 }) }}>
                       <button onClick={() => setOpenPortion(isOpen?null:i)} style={{ width:"100%", background:"none", border:"none", padding:"13px 14px", display:"flex", alignItems:"center", gap:12, cursor:"pointer", color:"inherit" }}>
-                        <div style={{ fontSize:24, width:40, height:40, background:"rgba(255,255,255,0.05)", borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{p.emoji}</div>
+                        <div style={{ fontSize:24, width:40, height:40, background:BG, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{p.emoji}</div>
                         <div style={{ flex:1, textAlign:"left" }}>
                           <div style={{ fontSize:14, fontWeight:700 }}>{p.food}</div>
                           <div style={{ fontSize:11, color:pc, fontWeight:600, marginTop:2 }}>{p.rule} · {p.grams}</div>
                         </div>
-                        <div style={{ color:"rgba(255,255,255,0.2)", fontSize:14 }}>{isOpen?"▲":"▼"}</div>
+                        <div style={{ color:TEXT3, fontSize:14 }}>{isOpen?"▲":"▼"}</div>
                       </button>
                       {isOpen && (
                         <div style={{ borderTop:"1px solid rgba(255,255,255,0.06)", padding:"4px 14px 16px" }}>
                           <PortionVisual type={p.visual} color={pc} />
-                          <div style={{ background:pc+"10", border:`1px solid ${pc}25`, borderRadius:10, padding:"10px 12px", fontSize:12, color:"rgba(255,255,255,0.7)", lineHeight:1.6 }}>💡 {p.desc}</div>
+                          <div style={{ background:pc+"10", border:`1px solid ${pc}25`, borderRadius:10, padding:"10px 12px", fontSize:12, color:TEXT2, lineHeight:1.6 }}>💡 {p.desc}</div>
                         </div>
                       )}
                     </div>
@@ -725,17 +731,17 @@ export default function App() {
       ══════════════════════════════════════════════════════════════════════ */}
       {section === "training" && (
         <>
-          <div style={{ background:"#0c0c1a", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"16px 18px 0", position:"sticky", top:0, zIndex:50 }}>
+          <div style={{ background:BG2, borderBottom:`1px solid ${BG3}`, padding:"16px 18px 0", position:"sticky", top:0, zIndex:50 }}>
             <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
-              <button onClick={() => setSection("home")} style={{ background:"rgba(255,255,255,0.06)", border:"none", borderRadius:10, width:34, height:34, cursor:"pointer", color:"rgba(255,255,255,0.6)", fontSize:18 }}>←</button>
+              <button onClick={() => setSection("home")} style={{ background:BG2, border:"none", borderRadius:10, width:34, height:34, cursor:"pointer", color:TEXT2, fontSize:18 }}>←</button>
               <div style={{ flex:1 }}>
-                <div style={{ fontFamily:"'Bebas Neue'", fontSize:22, letterSpacing:2, color:"#fff", lineHeight:1 }}>ENTRENO</div>
+                <div style={{ fontFamily:"'Bebas Neue'", fontSize:22, letterSpacing:2, color:TEXT, lineHeight:1 }}>ENTRENO</div>
                 <div style={{ fontSize:10, color:nextT.color, fontWeight:700, letterSpacing:1 }}>HOY TOCA: {nextT.label} {nextT.emoji}</div>
               </div>
               <div style={{ display:"flex", gap:6 }}>
-                <div style={{ textAlign:"center", background:"rgba(255,255,255,0.05)", borderRadius:10, padding:"6px 10px" }}>
+                <div style={{ textAlign:"center", background:BG, borderRadius:10, padding:"6px 10px" }}>
                   <div style={{ fontFamily:"'Bebas Neue'", fontSize:22, color:ACC, lineHeight:1 }}>{weekSessions}/4</div>
-                  <div style={{ fontSize:8, color:"rgba(255,255,255,0.3)", fontWeight:700 }}>SEMANA</div>
+                  <div style={{ fontSize:8, color:TEXT3, fontWeight:700 }}>SEMANA</div>
                 </div>
               </div>
             </div>
@@ -755,9 +761,9 @@ export default function App() {
               <>
                 {/* Month nav */}
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-                  <button onClick={() => setViewMonth(p => { const d=new Date(p.y,p.m-1); return {y:d.getFullYear(),m:d.getMonth()}; })} style={{ background:"rgba(255,255,255,0.06)", border:"none", borderRadius:10, width:36, height:36, cursor:"pointer", color:"#fff", fontSize:16 }}>‹</button>
+                  <button onClick={() => setViewMonth(p => { const d=new Date(p.y,p.m-1); return {y:d.getFullYear(),m:d.getMonth()}; })} style={{ background:BG2, border:"none", borderRadius:10, width:36, height:36, cursor:"pointer", color:TEXT, fontSize:16 }}>‹</button>
                   <div style={{ fontFamily:"'Bebas Neue'", fontSize:20, letterSpacing:2 }}>{MONTH_NAMES[viewMonth.m]} {viewMonth.y}</div>
-                  <button onClick={() => setViewMonth(p => { const d=new Date(p.y,p.m+1); return {y:d.getFullYear(),m:d.getMonth()}; })} style={{ background:"rgba(255,255,255,0.06)", border:"none", borderRadius:10, width:36, height:36, cursor:"pointer", color:"#fff", fontSize:16 }}>›</button>
+                  <button onClick={() => setViewMonth(p => { const d=new Date(p.y,p.m+1); return {y:d.getFullYear(),m:d.getMonth()}; })} style={{ background:BG2, border:"none", borderRadius:10, width:36, height:36, cursor:"pointer", color:TEXT, fontSize:16 }}>›</button>
                 </div>
 
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(7,1fr)", gap:3, marginBottom:4 }}>
@@ -776,7 +782,7 @@ export default function App() {
                     const t = sess?.trainingId ? TRAININGS.find(x=>x.id===sess.trainingId) : null;
                     return (
                       <button key={day} onClick={() => openDayModal(viewMonth.y, viewMonth.m, day)} style={{ aspectRatio:"1", borderRadius:9, border:isToday?`2px solid ${ACC}`:t?`1.5px solid ${t.color}50`:"1.5px solid rgba(255,255,255,0.07)", background:t?t.color+"18":isToday?ACC+"10":"rgba(255,255,255,0.03)", cursor:isFuture?"default":"pointer", color:isFuture?"rgba(255,255,255,0.18)":"#fff", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:2, gap:1 }}>
-                        <div style={{ fontSize:10, fontWeight:isToday?800:500, color:isToday?ACC:t?t.color:"rgba(255,255,255,0.65)" }}>{day}</div>
+                        <div style={{ fontSize:10, fontWeight:isToday?800:500, color:isToday?ACC:t?t.color:TEXT2 }}>{day}</div>
                         {t && <div style={{ fontSize:11 }}>{t.emoji}</div>}
                         {sess?.yoga && !t && <div style={{ fontSize:10 }}>🧘</div>}
                         {sess?.yoga && t && <div style={{ fontSize:7, color:"#a78bfa" }}>yoga</div>}
@@ -790,12 +796,12 @@ export default function App() {
                   {TRAININGS.map(t => (
                     <div key={t.id} style={{ display:"flex", alignItems:"center", gap:4 }}>
                       <div style={{ width:9, height:9, borderRadius:2, background:t.color }}/>
-                      <span style={{ fontSize:10, color:"rgba(255,255,255,0.45)" }}>{t.label}</span>
+                      <span style={{ fontSize:10, color:TEXT3 }}>{t.label}</span>
                     </div>
                   ))}
                   <div style={{ display:"flex", alignItems:"center", gap:4 }}>
                     <span style={{ fontSize:10 }}>🧘</span>
-                    <span style={{ fontSize:10, color:"rgba(255,255,255,0.45)" }}>Yoga</span>
+                    <span style={{ fontSize:10, color:TEXT3 }}>Yoga</span>
                   </div>
                 </div>
 
@@ -815,14 +821,14 @@ export default function App() {
                           {t?t.label:"Solo yoga"}
                           {s.yoga && t && <span style={{ fontSize:10, color:"#a78bfa", marginLeft:6 }}>+ yoga</span>}
                         </div>
-                        <div style={{ fontSize:11, color:"rgba(255,255,255,0.35)", marginTop:2 }}>{d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"})}</div>
-                        {s.note && <div style={{ fontSize:11, color:"rgba(255,255,255,0.5)", marginTop:3, fontStyle:"italic" }}>"{s.note}"</div>}
+                        <div style={{ fontSize:11, color:TEXT3, marginTop:2 }}>{d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"})}</div>
+                        {s.note && <div style={{ fontSize:11, color:TEXT2, marginTop:3, fontStyle:"italic" }}>"{s.note}"</div>}
                       </div>
                     </div>
                   );
                 })}
                 {!Object.keys(sessions).length && (
-                  <div style={{ textAlign:"center", padding:"30px 20px", color:"rgba(255,255,255,0.2)", fontSize:13 }}>Toca cualquier día para registrar tu primera sesión 💪</div>
+                  <div style={{ textAlign:"center", padding:"30px 20px", color:TEXT3, fontSize:13 }}>Toca cualquier día para registrar tu primera sesión 💪</div>
                 )}
               </>
             )}
@@ -838,7 +844,7 @@ export default function App() {
                   ].map(s => (
                     <div key={s.label} style={{ ...card({ padding:"14px 10px", textAlign:"center" }) }}>
                       <div style={{ fontFamily:"'Bebas Neue'", fontSize:32, color:s.color, lineHeight:1 }}>{s.val}</div>
-                      <div style={{ fontSize:8.5, color:"rgba(255,255,255,0.3)", fontWeight:700, letterSpacing:0.5, marginTop:3 }}>{s.label}</div>
+                      <div style={{ fontSize:8.5, color:TEXT3, fontWeight:700, letterSpacing:0.5, marginTop:3 }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
@@ -854,7 +860,7 @@ export default function App() {
                           <div style={{ fontSize:12, fontWeight:600 }}>{t.emoji} {t.label}</div>
                           <div style={{ fontSize:12, color:t.color, fontWeight:700 }}>{count}x</div>
                         </div>
-                        <div style={{ height:5, background:"rgba(255,255,255,0.06)", borderRadius:100 }}>
+                        <div style={{ height:5, background:BG2, borderRadius:100 }}>
                           <div style={{ height:"100%", width:`${pct}%`, background:t.color, borderRadius:100, transition:"width 0.5s" }}/>
                         </div>
                       </div>
@@ -870,7 +876,7 @@ export default function App() {
                 {measHistory.length > 0 && (
                   <>
                     <div style={{ ...card({ padding:14, marginBottom:14 }) }}>
-                      <div style={{ fontSize:10, color:"rgba(255,255,255,0.35)", fontWeight:700, marginBottom:10 }}>TENDENCIA PESO (kg)</div>
+                      <div style={{ fontSize:10, color:TEXT3, fontWeight:700, marginBottom:10 }}>TENDENCIA PESO (kg)</div>
                       <div style={{ display:"flex", alignItems:"flex-end", gap:4, height:60 }}>
                         {measHistory.slice(-8).map((m,i,arr) => {
                           const vals = arr.map(x=>parseFloat(x.weight)).filter(Boolean);
@@ -888,10 +894,10 @@ export default function App() {
                     </div>
                     {measHistory.slice().reverse().slice(0,6).map((m,i) => (
                       <div key={i} style={{ ...card({ marginBottom:8, padding:"10px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }) }}>
-                        <div style={{ fontSize:11, color:"rgba(255,255,255,0.4)" }}>{m.date}</div>
+                        <div style={{ fontSize:11, color:TEXT3 }}>{m.date}</div>
                         <div style={{ display:"flex", gap:14 }}>
-                          {m.weight && <div style={{ fontSize:13, fontWeight:700 }}><span style={{ color:"rgba(255,255,255,0.35)", fontSize:10 }}>PESO </span>{m.weight}kg</div>}
-                          {m.waist && <div style={{ fontSize:13, fontWeight:700 }}><span style={{ color:"rgba(255,255,255,0.35)", fontSize:10 }}>CINTURA </span>{m.waist}cm</div>}
+                          {m.weight && <div style={{ fontSize:13, fontWeight:700 }}><span style={{ color:TEXT3, fontSize:10 }}>PESO </span>{m.weight}kg</div>}
+                          {m.waist && <div style={{ fontSize:13, fontWeight:700 }}><span style={{ color:TEXT3, fontSize:10 }}>CINTURA </span>{m.waist}cm</div>}
                         </div>
                       </div>
                     ))}
@@ -906,28 +912,28 @@ export default function App() {
       {/* ══ DAY MODAL ══ */}
       {activeDay && draft && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} onClick={() => { setActiveDay(null); setDraft(null); }}>
-          <div style={{ background:"#13131f", borderRadius:"20px 20px 0 0", width:"100%", maxWidth:500, padding:20, paddingBottom:36, maxHeight:"85vh", overflowY:"auto" }} onClick={e=>e.stopPropagation()}>
+          <div style={{ background:"#faf7f2", borderRadius:"20px 20px 0 0", width:"100%", maxWidth:500, padding:20, paddingBottom:36, maxHeight:"85vh", overflowY:"auto" }} onClick={e=>e.stopPropagation()}>
             <div style={{ width:36, height:4, background:"rgba(255,255,255,0.15)", borderRadius:100, margin:"0 auto 16px" }}/>
             <div style={{ fontFamily:"'Bebas Neue'", fontSize:20, letterSpacing:2, marginBottom:16 }}>
               {(() => { const p=activeDay.split("-"); const d=new Date(+p[0],+p[1],+p[2]); return d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}); })()}
             </div>
-            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:"rgba(255,255,255,0.3)", marginBottom:10 }}>ENTRENAMIENTO</div>
+            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:TEXT3, marginBottom:10 }}>ENTRENAMIENTO</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:16 }}>
               {[{id:null,label:"Sin entreno",emoji:"—",color:"#6b7280"},...TRAININGS].map(t => (
                 <button key={t.id??"none"} onClick={() => setDraft(d=>({...d,trainingId:t.id}))} style={{ background:draft.trainingId===t.id?t.color+"22":"rgba(255,255,255,0.04)", border:draft.trainingId===t.id?`1.5px solid ${t.color}`:"1.5px solid rgba(255,255,255,0.1)", borderRadius:12, padding:"11px 10px", cursor:"pointer", color:"inherit", display:"flex", alignItems:"center", gap:8 }}>
                   <span style={{ fontSize:18 }}>{t.emoji}</span>
-                  <span style={{ fontSize:13, fontWeight:600, color:draft.trainingId===t.id?t.color:"rgba(255,255,255,0.75)" }}>{t.label}</span>
+                  <span style={{ fontSize:13, fontWeight:600, color:draft.trainingId===t.id?t.color:TEXT2 }}>{t.label}</span>
                 </button>
               ))}
             </div>
-            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:"rgba(255,255,255,0.3)", marginBottom:8 }}>YOGA NOCTURNO</div>
+            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:TEXT3, marginBottom:8 }}>YOGA NOCTURNO</div>
             <button onClick={() => setDraft(d=>({...d,yoga:!d.yoga}))} style={{ width:"100%", background:draft.yoga?"rgba(167,139,250,0.15)":"rgba(255,255,255,0.04)", border:draft.yoga?"1.5px solid #a78bfa":"1.5px solid rgba(255,255,255,0.1)", borderRadius:12, padding:"12px 14px", cursor:"pointer", color:"inherit", display:"flex", alignItems:"center", gap:10, marginBottom:16 }}>
               <span style={{ fontSize:20 }}>🧘</span>
               <span style={{ fontSize:13, fontWeight:600, color:draft.yoga?"#a78bfa":"rgba(255,255,255,0.55)" }}>{draft.yoga?"Yoga hecho ✓":"Marcar yoga nocturno"}</span>
             </button>
-            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:"rgba(255,255,255,0.3)", marginBottom:8 }}>NOTA RÁPIDA (opcional)</div>
-            <textarea value={draft.note||""} onChange={e=>setDraft(d=>({...d,note:e.target.value}))} placeholder="Ej: subí peso en press, buena sesión, me costó mucho..." style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:12, padding:"11px 12px", color:"#e2e2f0", fontSize:13, resize:"none", height:65, fontFamily:"'Figtree',sans-serif", marginBottom:16 }}/>
-            <button onClick={saveDraft} style={{ width:"100%", background:ACC, border:"none", borderRadius:14, padding:15, color:"#080810", fontSize:15, fontWeight:800, cursor:"pointer" }}>Guardar</button>
+            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:TEXT3, marginBottom:8 }}>NOTA RÁPIDA (opcional)</div>
+            <textarea value={draft.note||""} onChange={e=>setDraft(d=>({...d,note:e.target.value}))} placeholder="Ej: subí peso en press, buena sesión, me costó mucho..." style={{ width:"100%", background:BG, border:`1px solid ${BG3}`, borderRadius:12, padding:"11px 12px", color:TEXT, fontSize:13, resize:"none", height:65, fontFamily:"'Figtree',sans-serif", marginBottom:16 }}/>
+            <button onClick={saveDraft} style={{ width:"100%", background:ACC, border:"none", borderRadius:14, padding:15, color:BG, fontSize:15, fontWeight:800, cursor:"pointer" }}>Guardar</button>
           </div>
         </div>
       )}
@@ -935,16 +941,16 @@ export default function App() {
       {/* ══ MEASUREMENT MODAL ══ */}
       {measOpen && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} onClick={() => setMeasOpen(false)}>
-          <div style={{ background:"#13131f", borderRadius:"20px 20px 0 0", width:"100%", maxWidth:500, padding:20, paddingBottom:36 }} onClick={e=>e.stopPropagation()}>
+          <div style={{ background:"#faf7f2", borderRadius:"20px 20px 0 0", width:"100%", maxWidth:500, padding:20, paddingBottom:36 }} onClick={e=>e.stopPropagation()}>
             <div style={{ width:36, height:4, background:"rgba(255,255,255,0.15)", borderRadius:100, margin:"0 auto 16px" }}/>
             <div style={{ fontFamily:"'Bebas Neue'", fontSize:22, letterSpacing:2, marginBottom:18 }}>MEDICIÓN DE HOY</div>
             {[{key:"weight",label:"PESO",unit:"kg",ph:"Ej: 84.5"},{key:"waist",label:"CINTURA",unit:"cm",ph:"Ej: 92"}].map(f => (
               <div key={f.key} style={{ marginBottom:14 }}>
-                <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:"rgba(255,255,255,0.3)", marginBottom:8 }}>{f.label} ({f.unit})</div>
-                <input type="number" value={measInput[f.key]} onChange={e=>setMeasInput(p=>({...p,[f.key]:e.target.value}))} placeholder={f.ph} style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:12, padding:"13px 14px", color:"#e2e2f0", fontSize:16, fontFamily:"'Figtree',sans-serif" }}/>
+                <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:TEXT3, marginBottom:8 }}>{f.label} ({f.unit})</div>
+                <input type="number" value={measInput[f.key]} onChange={e=>setMeasInput(p=>({...p,[f.key]:e.target.value}))} placeholder={f.ph} style={{ width:"100%", background:BG, border:`1px solid ${BG3}`, borderRadius:12, padding:"13px 14px", color:TEXT, fontSize:16, fontFamily:"'Figtree',sans-serif" }}/>
               </div>
             ))}
-            <button onClick={saveMeas} style={{ width:"100%", background:ACC, border:"none", borderRadius:14, padding:15, color:"#080810", fontSize:15, fontWeight:800, cursor:"pointer", marginTop:6 }}>Guardar medición</button>
+            <button onClick={saveMeas} style={{ width:"100%", background:ACC, border:"none", borderRadius:14, padding:15, color:BG, fontSize:15, fontWeight:800, cursor:"pointer", marginTop:6 }}>Guardar medición</button>
           </div>
         </div>
       )}
@@ -952,17 +958,17 @@ export default function App() {
       {/* ══ CHECK-IN MODAL ══ */}
       {checkinOpen && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} onClick={() => setCheckinOpen(false)}>
-          <div style={{ background:"#13131f", borderRadius:"20px 20px 0 0", width:"100%", maxWidth:500, padding:20, paddingBottom:36, maxHeight:"85vh", overflowY:"auto" }} onClick={e=>e.stopPropagation()}>
+          <div style={{ background:"#faf7f2", borderRadius:"20px 20px 0 0", width:"100%", maxWidth:500, padding:20, paddingBottom:36, maxHeight:"85vh", overflowY:"auto" }} onClick={e=>e.stopPropagation()}>
             <div style={{ width:36, height:4, background:"rgba(255,255,255,0.15)", borderRadius:100, margin:"0 auto 16px" }}/>
             <div style={{ fontFamily:"'Bebas Neue'", fontSize:22, letterSpacing:2, marginBottom:6 }}>CHECK-IN SEMANAL</div>
-            <div style={{ fontSize:12, color:"rgba(255,255,255,0.4)", marginBottom:20 }}>3 preguntas, 30 segundos</div>
+            <div style={{ fontSize:12, color:TEXT3, marginBottom:20 }}>3 preguntas, 30 segundos</div>
             {[
               { key:"physical", label:"¿Cómo te sientes físicamente?", opts:["Muy mal","Regular","Bien","Muy bien"] },
               { key:"anxiety", label:"¿Cómo está la ansiedad?", opts:["Muy alta","Alta","Controlada","Tranquila"] },
               { key:"training", label:"¿Cumpliste el objetivo de entreno?", opts:["Nada","Poco","Casi","Sí, todo"] },
             ].map(q => (
               <div key={q.key} style={{ marginBottom:18 }}>
-                <div style={{ fontSize:13, fontWeight:600, marginBottom:10, color:"rgba(255,255,255,0.8)" }}>{q.label}</div>
+                <div style={{ fontSize:13, fontWeight:600, marginBottom:10, color:TEXT }}>{q.label}</div>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:6 }}>
                   {q.opts.map((opt,i) => (
                     <button key={i} onClick={() => setCheckinDraft(d=>({...d,[q.key]:i+1}))} style={{ background:checkinDraft[q.key]===i+1?ACC+"25":"rgba(255,255,255,0.04)", border:checkinDraft[q.key]===i+1?`1.5px solid ${ACC}`:"1.5px solid rgba(255,255,255,0.1)", borderRadius:10, padding:"8px 4px", cursor:"pointer", color:checkinDraft[q.key]===i+1?ACC:"rgba(255,255,255,0.55)", fontSize:11, fontWeight:600 }}>
@@ -972,14 +978,14 @@ export default function App() {
                 </div>
               </div>
             ))}
-            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:"rgba(255,255,255,0.3)", marginBottom:8 }}>NOTA (opcional)</div>
-            <textarea value={checkinDraft.note} onChange={e=>setCheckinDraft(d=>({...d,note:e.target.value}))} placeholder="Algo que quieras recordar de esta semana..." style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:12, padding:"11px 12px", color:"#e2e2f0", fontSize:13, resize:"none", height:65, fontFamily:"'Figtree',sans-serif", marginBottom:16 }}/>
-            <button onClick={saveCheckin} style={{ width:"100%", background:ACC, border:"none", borderRadius:14, padding:15, color:"#080810", fontSize:15, fontWeight:800, cursor:"pointer" }}>Guardar check-in</button>
+            <div style={{ fontSize:10, letterSpacing:2, fontWeight:800, color:TEXT3, marginBottom:8 }}>NOTA (opcional)</div>
+            <textarea value={checkinDraft.note} onChange={e=>setCheckinDraft(d=>({...d,note:e.target.value}))} placeholder="Algo que quieras recordar de esta semana..." style={{ width:"100%", background:BG, border:`1px solid ${BG3}`, borderRadius:12, padding:"11px 12px", color:TEXT, fontSize:13, resize:"none", height:65, fontFamily:"'Figtree',sans-serif", marginBottom:16 }}/>
+            <button onClick={saveCheckin} style={{ width:"100%", background:ACC, border:"none", borderRadius:14, padding:15, color:BG, fontSize:15, fontWeight:800, cursor:"pointer" }}>Guardar check-in</button>
           </div>
         </div>
       )}
 
-      <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:500, height:50, background:"linear-gradient(transparent, #080810)", pointerEvents:"none" }}/>
+      <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:500, height:50, background:`linear-gradient(transparent, ${BG})`, pointerEvents:"none" }}/>
     </div>
   );
 }
