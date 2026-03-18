@@ -105,52 +105,32 @@ function PortionVisual({type,color}){const row={display:"flex",alignItems:"cente
 
 // ─── POSTURE ROUTINE COMPONENT ───────────────────────────────────────────────
 function PostureRoutine({onComplete, onClose}){
-  const [started, setStarted]   = useState(false);
-  const [exIdx, setExIdx]       = useState(0);
-  const [setNum, setSetNum]     = useState(1);
-  const [repNum, setRepNum]     = useState(1);
-  const [side, setSide]         = useState("left");
-  const [done, setDone]         = useState(false);
-  const [elapsed, setElapsed]   = useState(0); // total stopwatch in seconds
-  const stopwatchRef            = useRef(null);
+  const [started, setStarted] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const [openEx, setOpenEx]   = useState(null);
+  const [done, setDone]       = useState(false);
+  const timerRef              = useRef(null);
 
-  const ex = POSTURE_ROUTINE[exIdx];
-  const totalExercises = POSTURE_ROUTINE.length;
-  const progressPct = ((exIdx + (setNum-1)/ex.sets) / totalExercises) * 100;
+  const fmt = s => `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
 
-  // Start global stopwatch when routine begins
-  const startRoutine = () => {
+  const start = () => {
     setStarted(true);
-    setElapsed(0);
-    stopwatchRef.current = setInterval(()=>setElapsed(e=>e+1), 1000);
+    timerRef.current = setInterval(()=>setElapsed(e=>e+1), 1000);
   };
 
-  useEffect(()=>()=>{if(stopwatchRef.current)clearInterval(stopwatchRef.current);},[]);
-
-  const fmtTime = s => `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
-
-  const advance = () => {
-    // Next rep
-    if(repNum < ex.reps){ setRepNum(r=>r+1); return; }
-    // Change side (pectoral)
-    if(ex.sides && side==="left"){ setSide("right"); setRepNum(1); return; }
-    // Next set
-    if(setNum < ex.sets){ setSetNum(s=>s+1); setRepNum(1); setSide("left"); return; }
-    // Next exercise
-    if(exIdx < totalExercises-1){
-      setExIdx(i=>i+1); setSetNum(1); setRepNum(1); setSide("left"); return;
-    }
-    // Done
-    clearInterval(stopwatchRef.current);
+  const finish = () => {
+    clearInterval(timerRef.current);
     setDone(true);
     onComplete();
   };
+
+  useEffect(()=>()=>clearInterval(timerRef.current),[]);
 
   if(done) return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,textAlign:"center"}}>
       <div style={{fontSize:72,marginBottom:16}}>🎉</div>
       <div style={{fontSize:26,fontWeight:800,color:T.green,marginBottom:8}}>¡Rutina completada!</div>
-      <div style={{fontSize:18,color:T.teal,fontWeight:700,marginBottom:8}}>{fmtTime(elapsed)}</div>
+      <div style={{fontSize:22,color:T.teal,fontWeight:700,marginBottom:8}}>{fmt(elapsed)}</div>
       <div style={{fontSize:15,color:T.text3,marginBottom:32}}>Tu espalda te lo agradecerá.</div>
       <button onClick={onClose} style={{background:T.green,border:"none",borderRadius:14,padding:"15px 40px",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer"}}>Volver al inicio</button>
     </div>
@@ -158,13 +138,13 @@ function PostureRoutine({onComplete, onClose}){
 
   if(!started) return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column",padding:"56px 20px 40px"}}>
-      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:24}}>
+      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:28}}>
         <button onClick={onClose} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:10,width:34,height:34,cursor:"pointer",color:T.acc,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
         <div style={{fontSize:20,fontWeight:800}}>Rutina Postural</div>
       </div>
-      <div style={{textAlign:"center",marginBottom:24}}>
-        <div style={{fontSize:52,marginBottom:8}}>🧘</div>
-        <div style={{fontSize:15,color:T.text3,lineHeight:1.6}}>4 ejercicios · ~10 minutos · Cada noche antes de dormir.</div>
+      <div style={{textAlign:"center",marginBottom:28}}>
+        <div style={{fontSize:56,marginBottom:12}}>🧘</div>
+        <div style={{fontSize:15,color:T.text3,lineHeight:1.7}}>4 ejercicios · ~10 minutos<br/>Hazla cada noche antes de dormir.</div>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:32}}>
         {POSTURE_ROUTINE.map((e,i)=>(
@@ -172,14 +152,12 @@ function PostureRoutine({onComplete, onClose}){
             <div style={{fontSize:20}}>{e.emoji}</div>
             <div style={{flex:1}}>
               <div style={{fontSize:13,fontWeight:700,color:T.text}}>{i+1}. {e.name}</div>
-              <div style={{fontSize:11,color:T.text3,marginTop:2}}>
-                {e.sets>1?`${e.sets} series × `:""}{e.reps} rep{e.reps>1?"s":""}{e.sides?" · cada lado":""}
-              </div>
+              <div style={{fontSize:11,color:T.text3,marginTop:2}}>{e.sets>1?`${e.sets} series × `:""}{e.reps} rep{e.reps>1?"s":""}{e.sides?" · cada lado":""}</div>
             </div>
           </div>
         ))}
       </div>
-      <button onClick={startRoutine} style={{background:T.teal,border:"none",borderRadius:16,padding:"18px",color:"#fff",fontSize:17,fontWeight:800,cursor:"pointer",width:"100%"}}>
+      <button onClick={start} style={{background:T.teal,border:"none",borderRadius:16,padding:"18px",color:"#fff",fontSize:17,fontWeight:800,cursor:"pointer",width:"100%"}}>
         Empezar rutina
       </button>
     </div>
@@ -187,67 +165,48 @@ function PostureRoutine({onComplete, onClose}){
 
   return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column"}}>
-      {/* Header with stopwatch */}
-      <div style={{background:T.bg,borderBottom:`1px solid ${T.bg3}`,padding:"52px 20px 12px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
-          <button onClick={onClose} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:10,width:34,height:34,cursor:"pointer",color:T.acc,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
-          <div style={{flex:1}}>
-            <div style={{fontSize:12,color:T.text3,fontWeight:600}}>Ejercicio {exIdx+1}/{totalExercises}</div>
-          </div>
-          {/* Stopwatch */}
-          <div style={{background:T.teal+"15",border:`1px solid ${T.teal}30`,borderRadius:10,padding:"6px 12px",textAlign:"center"}}>
-            <div style={{fontSize:20,fontWeight:800,color:T.teal,letterSpacing:1}}>{fmtTime(elapsed)}</div>
-          </div>
-        </div>
-        {/* Progress bar */}
-        <div style={{height:5,background:T.bg3,borderRadius:100}}>
-          <div style={{height:"100%",width:`${progressPct}%`,background:T.teal,borderRadius:100,transition:"width 0.3s"}}/>
-        </div>
+      <div style={{background:T.bg,borderBottom:`1px solid ${T.bg3}`,padding:"52px 20px 16px",display:"flex",alignItems:"center",gap:12}}>
+        <button onClick={onClose} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:10,width:34,height:34,cursor:"pointer",color:T.acc,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+        <div style={{fontSize:17,fontWeight:800}}>Rutina en curso</div>
       </div>
 
-      <div style={{flex:1,padding:"20px 20px 40px",display:"flex",flexDirection:"column",gap:16}}>
+      <div style={{padding:"24px 20px 40px",display:"flex",flexDirection:"column",gap:20,overflowY:"auto"}}>
 
-        {/* Exercise card */}
-        <div style={{background:T.teal+"10",border:`1px solid ${T.teal}25`,borderRadius:20,padding:20}}>
-          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
-            <div style={{fontSize:32,width:52,height:52,background:T.teal+"20",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center"}}>{ex.emoji}</div>
-            <div>
-              <div style={{fontSize:18,fontWeight:800,color:T.text}}>{ex.name}</div>
-              {ex.sides&&<div style={{fontSize:12,color:T.teal,fontWeight:700,marginTop:2}}>{side==="left"?"👈 Lado izquierdo":"👉 Lado derecho"}</div>}
-            </div>
-          </div>
+        {/* Big stopwatch */}
+        <div style={{background:`linear-gradient(135deg,${T.teal}15,${T.bg})`,border:`1px solid ${T.teal}30`,borderRadius:24,padding:"36px 20px",textAlign:"center"}}>
+          <div style={{fontSize:11,fontWeight:700,color:T.teal,letterSpacing:1.5,marginBottom:10}}>TIEMPO TRANSCURRIDO</div>
+          <div style={{fontSize:80,fontWeight:800,color:T.teal,letterSpacing:4,lineHeight:1,fontVariantNumeric:"tabular-nums"}}>{fmt(elapsed)}</div>
+        </div>
 
-          {/* Rep / set counters */}
-          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-            {ex.sets>1&&(
-              <div style={{background:T.teal+"20",border:`1px solid ${T.teal}35`,borderRadius:8,padding:"5px 12px",fontSize:12,fontWeight:700,color:T.teal}}>
-                Serie {setNum}/{ex.sets}
+        {/* Expandable exercises */}
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:T.text3,marginBottom:10,paddingLeft:2,letterSpacing:0.3}}>EJERCICIOS · toca para ver instrucciones</div>
+          {POSTURE_ROUTINE.map((e,i)=>{
+            const isOpen = openEx===i;
+            return(
+              <div key={e.id} style={{background:T.bg,border:`1px solid ${T.bg3}`,borderRadius:14,overflow:"hidden",marginBottom:8}}>
+                <button onClick={()=>setOpenEx(isOpen?null:i)} style={{width:"100%",background:"none",border:"none",padding:"13px 14px",display:"flex",alignItems:"center",gap:10,cursor:"pointer",color:"inherit"}}>
+                  <div style={{fontSize:20,width:38,height:38,background:T.teal+"12",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{e.emoji}</div>
+                  <div style={{flex:1,textAlign:"left"}}>
+                    <div style={{fontSize:13,fontWeight:700,color:T.text}}>{i+1}. {e.name}</div>
+                    <div style={{fontSize:11,color:T.teal,marginTop:2}}>{e.sets>1?`${e.sets}× `:""}{e.reps} rep{e.reps>1?"s":""}{e.sides?" · cada lado":""}</div>
+                  </div>
+                  <div style={{color:T.text3,fontSize:13}}>{isOpen?"▲":"▼"}</div>
+                </button>
+                {isOpen&&(
+                  <div style={{borderTop:`1px solid ${T.bg3}`,padding:"12px 14px 14px"}}>
+                    <div style={{fontSize:13,color:T.text2,lineHeight:1.7,whiteSpace:"pre-line",marginBottom:e.tip?10:0}}>{e.instructions}</div>
+                    {e.tip&&<div style={{background:T.orange+"10",border:`1px solid ${T.orange}20`,borderRadius:10,padding:"9px 11px",fontSize:12,color:T.text2,lineHeight:1.5}}>💡 {e.tip}</div>}
+                  </div>
+                )}
               </div>
-            )}
-            <div style={{background:T.teal+"20",border:`1px solid ${T.teal}35`,borderRadius:8,padding:"5px 12px",fontSize:12,fontWeight:700,color:T.teal}}>
-              Rep {repNum}/{ex.reps}
-            </div>
-          </div>
+            );
+          })}
         </div>
 
-        {/* Instructions */}
-        <div style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:14,padding:14,flex:1}}>
-          <div style={{fontSize:11,fontWeight:700,color:T.text3,marginBottom:8}}>INSTRUCCIONES</div>
-          <div style={{fontSize:13,color:T.text2,lineHeight:1.7,whiteSpace:"pre-line"}}>{ex.instructions}</div>
-          {ex.tip&&(
-            <div style={{marginTop:12,background:T.orange+"10",border:`1px solid ${T.orange}20`,borderRadius:10,padding:"9px 11px",fontSize:12,color:T.text2,lineHeight:1.5}}>
-              💡 {ex.tip}
-            </div>
-          )}
-        </div>
-
-        {/* Next button */}
-        <button onClick={advance} style={{background:T.teal,border:"none",borderRadius:16,padding:"18px",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer",width:"100%"}}>
-          {repNum<ex.reps ? `✓ Rep ${repNum} hecha` :
-           ex.sides&&side==="left" ? "✓ Cambiar de lado →" :
-           setNum<ex.sets ? `✓ Serie ${setNum} — descansar` :
-           exIdx<totalExercises-1 ? "✓ Siguiente ejercicio →" :
-           "✓ Terminar rutina"}
+        {/* Finish button */}
+        <button onClick={finish} style={{background:T.green,border:"none",borderRadius:16,padding:"18px",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer",width:"100%"}}>
+          ✓ He terminado la rutina
         </button>
       </div>
     </div>
