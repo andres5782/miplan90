@@ -103,243 +103,152 @@ const PORTIONS=[{food:"Carne o pollo",emoji:"🍗",rule:"Palma de la mano",grams
 
 function PortionVisual({type,color}){const row={display:"flex",alignItems:"center",justifyContent:"center",gap:16,margin:"12px 0"};const lbl={fontSize:9,color:T.text3,textAlign:"center",marginTop:4,fontWeight:700,letterSpacing:1};if(type==="palm")return(<div style={row}><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66"><ellipse cx="28" cy="47" rx="20" ry="17" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="16" y="12" width="7" height="26" rx="3.5" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="25" y="8" width="7" height="30" rx="3.5" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="34" y="10" width="7" height="28" rx="3.5" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="8" y="20" width="6" height="20" rx="3" fill={color+"22"} stroke={color} strokeWidth="1.5"/></svg><div style={lbl}>TU PALMA</div></div><div style={{fontSize:20,color:T.text3}}>≈</div><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66"><rect x="6" y="14" width="44" height="40" rx="8" fill={color+"18"} stroke={color} strokeWidth="1.5"/></svg><div style={lbl}>RACIÓN</div></div></div>);if(type==="fist")return(<div style={row}><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66"><ellipse cx="28" cy="42" rx="19" ry="20" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="17" y="20" width="7" height="17" rx="3.5" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="26" y="18" width="7" height="17" rx="3.5" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="35" y="20" width="7" height="17" rx="3.5" fill={color+"22"} stroke={color} strokeWidth="1.5"/></svg><div style={lbl}>PUÑO</div></div><div style={{fontSize:20,color:T.text3}}>≈</div><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66"><ellipse cx="28" cy="40" rx="20" ry="16" fill={color+"18"} stroke={color} strokeWidth="1.5"/>{[0,1,2,3,4].map(i=><ellipse key={i} cx={12+i*8} cy={40} rx="2.5" ry="2" fill={color} opacity="0.5"/>)}</svg><div style={lbl}>RACIÓN</div></div></div>);if(type==="half")return(<div style={row}><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66"><ellipse cx="28" cy="36" rx="17" ry="24" fill={color+"22"} stroke={color} strokeWidth="1.5"/><line x1="11" y1="36" x2="45" y2="36" stroke={color} strokeWidth="2" strokeDasharray="4,2"/><text x="28" y="52" textAnchor="middle" fill={color} fontSize="11" fontWeight="700">½</text></svg><div style={lbl}>MÁXIMO</div></div><div style={{fontSize:20,color:T.text3}}>→</div><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66"><ellipse cx="28" cy="36" rx="17" ry="24" fill={color+"18"} stroke={color} strokeWidth="1.5"/><text x="28" y="38" textAnchor="middle" fill={color} fontSize="9" fontWeight="700">1 si no hay</text><text x="28" y="50" textAnchor="middle" fill={color} fontSize="9" fontWeight="700">más grasas</text></svg><div style={lbl}>REGLA</div></div></div>);if(type==="handful")return(<div style={row}><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66"><ellipse cx="28" cy="48" rx="20" ry="13" fill={color+"22"} stroke={color} strokeWidth="1.5"/>{[0,1,2,3,4].map(i=><ellipse key={i} cx={12+i*9} cy={46} rx="3.5" ry="5" fill={color} opacity="0.5"/>)}</svg><div style={lbl}>PUÑADO</div></div><div style={{fontSize:20,color:T.text3}}>≈</div><div style={{textAlign:"center"}}><svg width="56" height="66" viewBox="0 0 56 66">{[...Array(12)].map((_,i)=><ellipse key={i} cx={14+(i%4)*10} cy={24+Math.floor(i/4)*14} rx="4" ry="5.5" fill={color} opacity="0.45"/>)}</svg><div style={lbl}>~15 UNIDADES</div></div></div>);if(type==="spoon")return(<div style={row}>{[1,2].map(n=>(<div key={n} style={{textAlign:"center"}}><svg width="40" height="66" viewBox="0 0 40 66"><ellipse cx="20" cy="18" rx="13" ry="15" fill={color+"22"} stroke={color} strokeWidth="1.5"/><rect x="17" y="32" width="6" height="26" rx="3" fill={color+"22"} stroke={color} strokeWidth="1.5"/></svg><div style={lbl}>CUCHARA {n}</div></div>))}</div>);return(<div style={{textAlign:"center",padding:"16px 0"}}><div style={{fontSize:36,color}}>∞</div><div style={{fontSize:12,color,fontWeight:700,marginTop:4}}>SIN LÍMITE</div></div>);}
 
-// ─── POSTURE TIMER COMPONENT ──────────────────────────────────────────────────
-function PostureRoutine({sessions, onComplete, onClose}){
-  // phase: "intro" | "exercise" | "hold" | "rest" | "between_sides" | "done"
-  const [phase, setPhase]       = useState("intro");
+// ─── POSTURE ROUTINE COMPONENT ───────────────────────────────────────────────
+function PostureRoutine({onComplete, onClose}){
+  const [started, setStarted]   = useState(false);
   const [exIdx, setExIdx]       = useState(0);
   const [setNum, setSetNum]     = useState(1);
   const [repNum, setRepNum]     = useState(1);
-  const [side, setSide]         = useState("left"); // for pectoral
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [running, setRunning]   = useState(false);
-  const [flash, setFlash]       = useState(false);
-  const intervalRef             = useRef(null);
+  const [side, setSide]         = useState("left");
+  const [done, setDone]         = useState(false);
+  const [elapsed, setElapsed]   = useState(0); // total stopwatch in seconds
+  const stopwatchRef            = useRef(null);
 
   const ex = POSTURE_ROUTINE[exIdx];
   const totalExercises = POSTURE_ROUTINE.length;
+  const progressPct = ((exIdx + (setNum-1)/ex.sets) / totalExercises) * 100;
 
-  const beep = useCallback(()=>{
-    try{
-      const ctx=new(window.AudioContext||window.webkitAudioContext)();
-      const o=ctx.createOscillator();const g=ctx.createGain();
-      o.connect(g);g.connect(ctx.destination);
-      o.frequency.value=880;g.gain.setValueAtTime(0.3,ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
-      o.start(ctx.currentTime);o.stop(ctx.currentTime+0.3);
-    }catch{}
-    setFlash(true);setTimeout(()=>setFlash(false),300);
-  },[]);
-
-  const clearTimer=()=>{if(intervalRef.current)clearInterval(intervalRef.current);};
-
-  const startCountdown=(secs,onDone)=>{
-    clearTimer();
-    setTimeLeft(secs);
-    setRunning(true);
-    intervalRef.current=setInterval(()=>{
-      setTimeLeft(t=>{
-        if(t<=1){clearInterval(intervalRef.current);setRunning(false);onDone();return 0;}
-        return t-1;
-      });
-    },1000);
+  // Start global stopwatch when routine begins
+  const startRoutine = () => {
+    setStarted(true);
+    setElapsed(0);
+    stopwatchRef.current = setInterval(()=>setElapsed(e=>e+1), 1000);
   };
 
-  useEffect(()=>()=>clearTimer(),[]);
+  useEffect(()=>()=>{if(stopwatchRef.current)clearInterval(stopwatchRef.current);},[]);
 
-  // ── Advance logic ──
-  const advanceFromRep=useCallback(()=>{
-    beep();
-    if(ex.holdSecs>0){
-      // go to hold phase
-      setPhase("hold");
-      startCountdown(ex.holdSecs,()=>{
-        beep();
-        // after hold: next rep or next set or next exercise
-        if(repNum<ex.reps){
-          setRepNum(r=>r+1);
-          setPhase("exercise");
-        } else if(ex.sides && side==="left"){
-          setSide("right");setRepNum(1);
-          setPhase("between_sides");
-          startCountdown(10,()=>{beep();setPhase("exercise");});
-        } else if(setNum<ex.sets){
-          setSetNum(s=>s+1);setRepNum(1);setSide("left");
-          if(ex.restBetweenSets>0){setPhase("rest");startCountdown(ex.restBetweenSets,()=>{beep();setPhase("exercise");});}
-          else setPhase("exercise");
-        } else {
-          nextExercise();
-        }
-      });
-    } else {
-      // no hold — just count reps manually with tap
-      if(repNum<ex.reps){setRepNum(r=>r+1);}
-      else if(ex.sides && side==="left"){
-        beep();setSide("right");setRepNum(1);setPhase("between_sides");
-        startCountdown(10,()=>{beep();setPhase("exercise");});
-      } else if(setNum<ex.sets){
-        beep();setSetNum(s=>s+1);setRepNum(1);setSide("left");
-        if(ex.restBetweenSets>0){setPhase("rest");startCountdown(ex.restBetweenSets,()=>{beep();setPhase("exercise");});}
-        else setPhase("exercise");
-      } else {
-        nextExercise();
-      }
+  const fmtTime = s => `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+
+  const advance = () => {
+    // Next rep
+    if(repNum < ex.reps){ setRepNum(r=>r+1); return; }
+    // Change side (pectoral)
+    if(ex.sides && side==="left"){ setSide("right"); setRepNum(1); return; }
+    // Next set
+    if(setNum < ex.sets){ setSetNum(s=>s+1); setRepNum(1); setSide("left"); return; }
+    // Next exercise
+    if(exIdx < totalExercises-1){
+      setExIdx(i=>i+1); setSetNum(1); setRepNum(1); setSide("left"); return;
     }
-  },[ex,repNum,setNum,side,beep]);
+    // Done
+    clearInterval(stopwatchRef.current);
+    setDone(true);
+    onComplete();
+  };
 
-  const nextExercise=useCallback(()=>{
-    beep();
-    if(exIdx<totalExercises-1){
-      setExIdx(i=>i+1);setSetNum(1);setRepNum(1);setSide("left");setPhase("rest");
-      startCountdown(15,()=>{beep();setPhase("exercise");});
-    } else {
-      setPhase("done");
-      onComplete();
-    }
-  },[exIdx,totalExercises,beep,onComplete]);
-
-  const startRoutine=()=>{setPhase("exercise");setExIdx(0);setSetNum(1);setRepNum(1);setSide("left");};
-
-  const progressPct=((exIdx+(setNum-1)/ex.sets)/totalExercises)*100;
-
-  const phaseColor={intro:T.teal,exercise:T.acc,hold:T.orange,rest:T.green,between_sides:T.purple,done:T.green}[phase]||T.acc;
-
-  if(phase==="done") return(
+  if(done) return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,textAlign:"center"}}>
       <div style={{fontSize:72,marginBottom:16}}>🎉</div>
       <div style={{fontSize:26,fontWeight:800,color:T.green,marginBottom:8}}>¡Rutina completada!</div>
-      <div style={{fontSize:15,color:T.text3,marginBottom:32}}>10 minutos bien invertidos. Tu espalda te lo agradecerá.</div>
-      <button onClick={onClose} style={{background:T.green,border:"none",borderRadius:14,padding:"15px 40px",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer"}}>
-        Volver al inicio
+      <div style={{fontSize:18,color:T.teal,fontWeight:700,marginBottom:8}}>{fmtTime(elapsed)}</div>
+      <div style={{fontSize:15,color:T.text3,marginBottom:32}}>Tu espalda te lo agradecerá.</div>
+      <button onClick={onClose} style={{background:T.green,border:"none",borderRadius:14,padding:"15px 40px",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer"}}>Volver al inicio</button>
+    </div>
+  );
+
+  if(!started) return(
+    <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column",padding:"56px 20px 40px"}}>
+      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:24}}>
+        <button onClick={onClose} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:10,width:34,height:34,cursor:"pointer",color:T.acc,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+        <div style={{fontSize:20,fontWeight:800}}>Rutina Postural</div>
+      </div>
+      <div style={{textAlign:"center",marginBottom:24}}>
+        <div style={{fontSize:52,marginBottom:8}}>🧘</div>
+        <div style={{fontSize:15,color:T.text3,lineHeight:1.6}}>4 ejercicios · ~10 minutos · Cada noche antes de dormir.</div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:32}}>
+        {POSTURE_ROUTINE.map((e,i)=>(
+          <div key={e.id} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:12,padding:"10px 14px",display:"flex",alignItems:"center",gap:10}}>
+            <div style={{fontSize:20}}>{e.emoji}</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:13,fontWeight:700,color:T.text}}>{i+1}. {e.name}</div>
+              <div style={{fontSize:11,color:T.text3,marginTop:2}}>
+                {e.sets>1?`${e.sets} series × `:""}{e.reps} rep{e.reps>1?"s":""}{e.sides?" · cada lado":""}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button onClick={startRoutine} style={{background:T.teal,border:"none",borderRadius:16,padding:"18px",color:"#fff",fontSize:17,fontWeight:800,cursor:"pointer",width:"100%"}}>
+        Empezar rutina
       </button>
     </div>
   );
 
   return(
-    <div style={{minHeight:"100vh",background:flash?phaseColor+"22":T.bg,transition:"background 0.2s",display:"flex",flexDirection:"column"}}>
-      {/* Header */}
-      <div style={{background:T.bg,borderBottom:`1px solid ${T.bg3}`,padding:"52px 20px 12px",display:"flex",alignItems:"center",gap:12}}>
-        <button onClick={onClose} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:10,width:34,height:34,cursor:"pointer",color:T.acc,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
-        <div style={{flex:1}}>
-          <div style={{fontSize:13,color:T.text3,fontWeight:600}}>Corrección Postural · Ejercicio {exIdx+1}/{totalExercises}</div>
-          <div style={{height:4,background:T.bg3,borderRadius:100,marginTop:6}}>
-            <div style={{height:"100%",width:`${progressPct}%`,background:T.teal,borderRadius:100,transition:"width 0.5s"}}/>
+    <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column"}}>
+      {/* Header with stopwatch */}
+      <div style={{background:T.bg,borderBottom:`1px solid ${T.bg3}`,padding:"52px 20px 12px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+          <button onClick={onClose} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:10,width:34,height:34,cursor:"pointer",color:T.acc,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+          <div style={{flex:1}}>
+            <div style={{fontSize:12,color:T.text3,fontWeight:600}}>Ejercicio {exIdx+1}/{totalExercises}</div>
           </div>
+          {/* Stopwatch */}
+          <div style={{background:T.teal+"15",border:`1px solid ${T.teal}30`,borderRadius:10,padding:"6px 12px",textAlign:"center"}}>
+            <div style={{fontSize:20,fontWeight:800,color:T.teal,letterSpacing:1}}>{fmtTime(elapsed)}</div>
+          </div>
+        </div>
+        {/* Progress bar */}
+        <div style={{height:5,background:T.bg3,borderRadius:100}}>
+          <div style={{height:"100%",width:`${progressPct}%`,background:T.teal,borderRadius:100,transition:"width 0.3s"}}/>
         </div>
       </div>
 
-      <div style={{flex:1,padding:"20px 20px 40px",display:"flex",flexDirection:"column"}}>
+      <div style={{flex:1,padding:"20px 20px 40px",display:"flex",flexDirection:"column",gap:16}}>
 
-        {phase==="intro"&&(
-          <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:16}}>
-            <div style={{fontSize:56}}>🧘</div>
-            <div style={{fontSize:24,fontWeight:800,color:T.text}}>Rutina Postural Nocturna</div>
-            <div style={{fontSize:14,color:T.text3,lineHeight:1.6,maxWidth:320}}>4 ejercicios · ~10 minutos · Hazla cada noche antes de dormir para mejorar tu postura en 90 días.</div>
-            <div style={{display:"flex",flexDirection:"column",gap:8,width:"100%",maxWidth:320,marginTop:8}}>
-              {POSTURE_ROUTINE.map((e,i)=>(
-                <div key={e.id} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:12,padding:"10px 14px",display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{fontSize:20}}>{e.emoji}</div>
-                  <div style={{flex:1,textAlign:"left"}}>
-                    <div style={{fontSize:13,fontWeight:700,color:T.text}}>{e.name}</div>
-                    <div style={{fontSize:11,color:T.text3}}>{e.sets>1?`${e.sets} series × `:`${e.sets}× `}{e.reps} reps{e.holdSecs>0?` · ${e.holdSecs}s hold`:""}{e.sides?" · cada lado":""}</div>
-                  </div>
-                </div>
-              ))}
+        {/* Exercise card */}
+        <div style={{background:T.teal+"10",border:`1px solid ${T.teal}25`,borderRadius:20,padding:20}}>
+          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
+            <div style={{fontSize:32,width:52,height:52,background:T.teal+"20",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center"}}>{ex.emoji}</div>
+            <div>
+              <div style={{fontSize:18,fontWeight:800,color:T.text}}>{ex.name}</div>
+              {ex.sides&&<div style={{fontSize:12,color:T.teal,fontWeight:700,marginTop:2}}>{side==="left"?"👈 Lado izquierdo":"👉 Lado derecho"}</div>}
             </div>
-            <button onClick={startRoutine} style={{background:T.teal,border:"none",borderRadius:16,padding:"16px 48px",color:"#fff",fontSize:17,fontWeight:800,cursor:"pointer",marginTop:8,width:"100%",maxWidth:320}}>
-              Empezar rutina
-            </button>
           </div>
-        )}
 
-        {(phase==="exercise"||phase==="hold")&&(
-          <div style={{flex:1,display:"flex",flexDirection:"column"}}>
-            {/* Exercise card */}
-            <div style={{background:phaseColor+"12",border:`1px solid ${phaseColor}30`,borderRadius:20,padding:20,marginBottom:16}}>
-              <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:12}}>
-                <div style={{fontSize:36,width:56,height:56,background:phaseColor+"20",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center"}}>{ex.emoji}</div>
-                <div>
-                  <div style={{fontSize:18,fontWeight:800,color:T.text}}>{ex.name}</div>
-                  {ex.sides&&<div style={{fontSize:12,color:phaseColor,fontWeight:700,marginTop:2}}>Lado: {side==="left"?"IZQUIERDO 👈":"DERECHO 👉"}</div>}
-                </div>
-              </div>
-
-              {/* Progress indicators */}
-              <div style={{display:"flex",gap:8,marginBottom:12}}>
-                {ex.sets>1&&<div style={{background:phaseColor+"20",border:`1px solid ${phaseColor}40`,borderRadius:8,padding:"4px 10px",fontSize:11,fontWeight:700,color:phaseColor}}>Serie {setNum}/{ex.sets}</div>}
-                <div style={{background:phaseColor+"20",border:`1px solid ${phaseColor}40`,borderRadius:8,padding:"4px 10px",fontSize:11,fontWeight:700,color:phaseColor}}>Rep {repNum}/{ex.reps}</div>
-                {phase==="hold"&&<div style={{background:T.orange+"20",border:`1px solid ${T.orange}40`,borderRadius:8,padding:"4px 10px",fontSize:11,fontWeight:700,color:T.orange}}>MANTÉN</div>}
-              </div>
-
-              {/* Timer for hold */}
-              {phase==="hold"&&(
-                <div style={{textAlign:"center",padding:"16px 0"}}>
-                  <div style={{fontSize:72,fontWeight:800,color:T.orange,lineHeight:1}}>{timeLeft}</div>
-                  <div style={{fontSize:13,color:T.text3,marginTop:4}}>segundos aguantando</div>
-                </div>
-              )}
-
-              {/* Rep counter for no-hold exercises or wall angels */}
-              {phase==="exercise"&&ex.holdSecs===0&&(
-                <div style={{textAlign:"center",padding:"8px 0"}}>
-                  <div style={{fontSize:56,fontWeight:800,color:phaseColor,lineHeight:1}}>{repNum}</div>
-                  <div style={{fontSize:13,color:T.text3,marginTop:4}}>de {ex.reps} repeticiones</div>
-                </div>
-              )}
-
-              {/* For chin tuck and YTW with hold, show current rep big */}
-              {phase==="exercise"&&ex.holdSecs>0&&(
-                <div style={{textAlign:"center",padding:"8px 0"}}>
-                  <div style={{fontSize:56,fontWeight:800,color:phaseColor,lineHeight:1}}>{repNum}</div>
-                  <div style={{fontSize:13,color:T.text3,marginTop:4}}>de {ex.reps} · Empieza el movimiento</div>
-                </div>
-              )}
-            </div>
-
-            {/* Instructions */}
-            <div style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:14,padding:14,marginBottom:16,flex:1}}>
-              <div style={{fontSize:11,fontWeight:700,color:T.text3,marginBottom:6}}>INSTRUCCIONES</div>
-              <div style={{fontSize:13,color:T.text2,lineHeight:1.7,whiteSpace:"pre-line"}}>{ex.instructions}</div>
-              {ex.tip&&(
-                <div style={{marginTop:10,background:T.orange+"10",border:`1px solid ${T.orange}25`,borderRadius:10,padding:"8px 10px",fontSize:12,color:T.text2}}>
-                  💡 {ex.tip}
-                </div>
-              )}
-            </div>
-
-            {/* Action button */}
-            {phase==="exercise"&&(
-              <button onClick={advanceFromRep} style={{background:phaseColor,border:"none",borderRadius:16,padding:"18px",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer",width:"100%"}}>
-                {ex.holdSecs>0?"Mantener →":"✓ Rep completada"}
-              </button>
-            )}
-            {phase==="hold"&&(
-              <button onClick={()=>{clearTimer();advanceFromRep();}} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:16,padding:"18px",color:T.text2,fontSize:14,fontWeight:600,cursor:"pointer",width:"100%"}}>
-                Saltar espera
-              </button>
-            )}
-          </div>
-        )}
-
-        {(phase==="rest"||phase==="between_sides")&&(
-          <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",gap:12}}>
-            <div style={{fontSize:48}}>{phase==="between_sides"?"🔄":"⏸️"}</div>
-            <div style={{fontSize:20,fontWeight:800,color:T.text}}>
-              {phase==="between_sides"?"Cambia de lado":"Descansa"}
-            </div>
-            <div style={{fontSize:72,fontWeight:800,color:phase==="between_sides"?T.purple:T.green,lineHeight:1}}>{timeLeft}</div>
-            <div style={{fontSize:13,color:T.text3}}>segundos</div>
-            {phase==="rest"&&exIdx<totalExercises&&(
-              <div style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:14,padding:14,marginTop:8,maxWidth:300}}>
-                <div style={{fontSize:11,color:T.text3,fontWeight:700,marginBottom:4}}>SIGUIENTE</div>
-                <div style={{fontSize:14,fontWeight:700,color:T.text}}>{POSTURE_ROUTINE[Math.min(exIdx+(phase==="rest"&&setNum>=ex.sets?1:0),totalExercises-1)]?.name}</div>
+          {/* Rep / set counters */}
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            {ex.sets>1&&(
+              <div style={{background:T.teal+"20",border:`1px solid ${T.teal}35`,borderRadius:8,padding:"5px 12px",fontSize:12,fontWeight:700,color:T.teal}}>
+                Serie {setNum}/{ex.sets}
               </div>
             )}
-            <button onClick={()=>{clearTimer();beep();setPhase(phase==="between_sides"?"exercise":"exercise");}} style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:14,padding:"12px 24px",color:T.text2,fontSize:13,fontWeight:600,cursor:"pointer",marginTop:8}}>
-              Saltar descanso
-            </button>
+            <div style={{background:T.teal+"20",border:`1px solid ${T.teal}35`,borderRadius:8,padding:"5px 12px",fontSize:12,fontWeight:700,color:T.teal}}>
+              Rep {repNum}/{ex.reps}
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Instructions */}
+        <div style={{background:T.bg2,border:`1px solid ${T.bg3}`,borderRadius:14,padding:14,flex:1}}>
+          <div style={{fontSize:11,fontWeight:700,color:T.text3,marginBottom:8}}>INSTRUCCIONES</div>
+          <div style={{fontSize:13,color:T.text2,lineHeight:1.7,whiteSpace:"pre-line"}}>{ex.instructions}</div>
+          {ex.tip&&(
+            <div style={{marginTop:12,background:T.orange+"10",border:`1px solid ${T.orange}20`,borderRadius:10,padding:"9px 11px",fontSize:12,color:T.text2,lineHeight:1.5}}>
+              💡 {ex.tip}
+            </div>
+          )}
+        </div>
+
+        {/* Next button */}
+        <button onClick={advance} style={{background:T.teal,border:"none",borderRadius:16,padding:"18px",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer",width:"100%"}}>
+          {repNum<ex.reps ? `✓ Rep ${repNum} hecha` :
+           ex.sides&&side==="left" ? "✓ Cambiar de lado →" :
+           setNum<ex.sets ? `✓ Serie ${setNum} — descansar` :
+           exIdx<totalExercises-1 ? "✓ Siguiente ejercicio →" :
+           "✓ Terminar rutina"}
+        </button>
       </div>
     </div>
   );
@@ -485,7 +394,7 @@ export default function App(){
   if(postureMode)return(
     <div style={{maxWidth:500,margin:"0 auto"}}>
       <style>{`*{box-sizing:border-box;}textarea,input{outline:none;font-family:inherit;}`}</style>
-      <PostureRoutine sessions={sessions} onComplete={handlePostureComplete} onClose={()=>setPostureMode(false)}/>
+      <PostureRoutine onComplete={handlePostureComplete} onClose={()=>setPostureMode(false)}/>
     </div>
   );
 
